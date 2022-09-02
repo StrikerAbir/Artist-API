@@ -19,7 +19,7 @@ const displayData = (datas) => {
               <a href="${data.strLastFMChart}" data-mdb-ripple="true" data-mdb-ripple-color="light" target="_blank">
                 <img
                 class="rounded-t-lg"
-                src="${data.strArtistFanart2}"
+                src="${data.strArtistClearart}"
                 alt=""
               />
               </a>
@@ -36,7 +36,7 @@ const displayData = (datas) => {
                 </p>
                 <button
                   type="button"
-                  class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                  class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="loadDetails(${data.idArtist})"
                 >
                   Details
                 </button>
@@ -87,3 +87,38 @@ document.getElementById('search-field').addEventListener('keyup', (event) => {
         searchProcess(10)
     }
 })
+
+const loadDetails = (data) => {
+    fetch(`https://theaudiodb.com/api/v1/json/2/artist.php?i=${data}`).then((response) => response.json()).then(json => displayDetails(json.artists)).catch(err => console.log(err));
+}
+const displayDetails = (datas) => {
+    
+    const modalBody = document.getElementById('modal-body');
+    modalBody.innerHTML = ``;
+    datas.forEach(data => {
+        const modalTitle = document.getElementById('exampleModalLabel')
+        modalTitle.innerText = `${data.strArtist}`;
+        const div = document.createElement('div');
+        div.innerHTML = `
+        <div class="flex justify-center">
+            <div class="rounded-lg shadow-lg bg-white max-w-sm">
+              <a href="${data.strLastFMChart}" data-mdb-ripple="true" data-mdb-ripple-color="light" target="_blank">
+                <img
+                class="rounded-t-lg"
+                src="${data.strArtistBanner}"
+                alt=""
+              />
+              </a>
+              <div class="p-6">
+                
+                <p class="text-gray-700 text-base mb-4">
+                  ${data.strBiographyEN}
+                </p>
+              </div>
+              </div>
+            </div>
+    `
+        modalBody.appendChild(div);
+    });
+    
+}
